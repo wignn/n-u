@@ -1,0 +1,10 @@
+pub mod admin;
+pub mod bookmarks;
+pub mod chapters;
+pub mod comments;
+pub mod forums;
+pub mod notifications;
+pub mod novels;
+pub mod reviews;
+pub mod search;
+pub mod users;
