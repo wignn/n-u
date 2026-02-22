@@ -47,11 +47,10 @@ pub async fn find_by_id(pool: &PgPool, id: Uuid) -> AppResult<Option<User>> {
 }
 
 pub async fn get_profile(pool: &PgPool, id: Uuid) -> AppResult<UserProfile> {
-    let profile = sqlx::query_as!(
-        UserProfile,
+    let profile = sqlx::query_as::<_, UserProfile>(
         "SELECT id, username, display_name, avatar_url, bio, created_at FROM users WHERE id = $1",
-        id
     )
+    .bind(id)
     .fetch_optional(pool)
     .await?
     .ok_or_else(|| AppError::NotFound("User not found".to_string()))?;

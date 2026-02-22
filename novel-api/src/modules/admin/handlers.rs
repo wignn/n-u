@@ -2,7 +2,7 @@ use axum::extract::{Path, Query, State};
 use axum::Json;
 
 use crate::app_state::AppState;
-use crate::error::{AppError, AppResult};
+use crate::error::AppResult;
 use crate::middleware::auth::{require_role, AuthUser};
 
 use super::models::*;
@@ -36,13 +36,8 @@ pub async fn list_reports(
     let per_page = query.per_page.unwrap_or(20).min(50);
     let offset = (page - 1) * per_page;
 
-    let reports = repository::list_reports(
-        &state.db,
-        query.status.as_deref(),
-        per_page,
-        offset,
-    )
-    .await?;
+    let reports =
+        repository::list_reports(&state.db, query.status.as_deref(), per_page, offset).await?;
 
     Ok(Json(reports))
 }

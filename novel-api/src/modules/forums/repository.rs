@@ -2,11 +2,11 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use super::models::*;
-use crate::error::{AppError, AppResult};
+use crate::error::AppResult;
 
 pub async fn list_categories(pool: &PgPool) -> AppResult<Vec<ForumCategory>> {
     let categories = sqlx::query_as::<_, ForumCategory>(
-        "SELECT * FROM forum_categories ORDER BY sort_order ASC"
+        "SELECT * FROM forum_categories ORDER BY sort_order ASC",
     )
     .fetch_all(pool)
     .await?;
@@ -56,7 +56,7 @@ pub async fn list_threads_by_category(
 
 pub async fn find_thread_by_id(pool: &PgPool, id: Uuid) -> AppResult<Option<ForumThread>> {
     let thread = sqlx::query_as::<_, ForumThread>(
-        "SELECT * FROM forum_threads WHERE id = $1 AND is_visible = TRUE"
+        "SELECT * FROM forum_threads WHERE id = $1 AND is_visible = TRUE",
     )
     .bind(id)
     .fetch_optional(pool)
@@ -72,7 +72,7 @@ pub async fn create_reply(
     body: &str,
 ) -> AppResult<ForumReply> {
     let reply = sqlx::query_as::<_, ForumReply>(
-        "INSERT INTO forum_replies (thread_id, user_id, body) VALUES ($1, $2, $3) RETURNING *"
+        "INSERT INTO forum_replies (thread_id, user_id, body) VALUES ($1, $2, $3) RETURNING *",
     )
     .bind(thread_id)
     .bind(user_id)

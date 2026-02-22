@@ -27,7 +27,9 @@ pub async fn search(
     Query(query): Query<SearchQuery>,
 ) -> AppResult<Json<SearchResult>> {
     if query.q.is_empty() {
-        return Err(AppError::BadRequest("Query parameter 'q' is required".to_string()));
+        return Err(AppError::BadRequest(
+            "Query parameter 'q' is required".to_string(),
+        ));
     }
 
     let index_name = query.index.as_deref().unwrap_or("novels");
@@ -36,12 +38,12 @@ pub async fn search(
 
     let index = state.search_client.index(index_name);
 
-    let results = index
+    let results: meilisearch_sdk::search::SearchResults<serde_json::Value> = index
         .search()
         .with_query(&query.q)
         .with_limit(per_page)
         .with_offset((page - 1) * per_page)
-        .execute::<serde_json::Value>()
+        .execute()
         .await
         .map_err(|e| AppError::Internal(anyhow::anyhow!("Search error: {}", e)))?;
 

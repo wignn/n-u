@@ -30,11 +30,15 @@ async fn main() -> anyhow::Result<()> {
         .await?;
     tracing::info!("Redis connected");
 
-    let event_publisher = EventPublisher::new(&config.nats_url).await?;
+    let event_publisher = EventPublisher::new(&config.nats_url)
+        .await
+        .map_err(|e| anyhow::anyhow!(e))?;
     tracing::info!("NATS JetStream connected");
 
-    let search_client =
-        meilisearch_sdk::Client::new(&config.meilisearch_url, Some(&config.meilisearch_api_key))?;
+    let search_client = meilisearch_sdk::client::Client::new(
+        &config.meilisearch_url,
+        Some(&config.meilisearch_api_key),
+    )?;
     tracing::info!("Meilisearch client initialized");
 
     let state = AppState {

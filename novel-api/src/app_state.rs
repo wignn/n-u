@@ -1,5 +1,6 @@
 use crate::config::Config;
 use crate::events::publisher::EventPublisher;
+use meilisearch_sdk::client::Client as MeiliClient;
 use redis::aio::ConnectionManager;
 use sqlx::PgPool;
 
@@ -9,5 +10,5 @@ pub struct AppState {
     pub redis: ConnectionManager,
     pub config: Config,
     pub event_publisher: EventPublisher,
-    pub search_client: meilisearch_sdk::Client,
+    pub search_client: MeiliClient,
 }

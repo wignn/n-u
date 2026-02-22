@@ -1,11 +1,9 @@
 use axum::{
-    middleware,
     routing::{delete, get, post, put},
     Router,
 };
 
 use crate::app_state::AppState;
-use crate::middleware::auth::auth_middleware;
 
 use super::handlers;
 
